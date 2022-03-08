@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-FILE* funkcia_v(FILE* organized_stuff, char* alokovane_pole){
+FILE* funkcia_v(FILE* organized_stuff){
     if(organized_stuff != NULL){
                 // TODO: Zistit ci uz boli vytvorene dynamicke polia
                 // Ak ano tak -> Vypisat jednotlive zaznamy z poli
