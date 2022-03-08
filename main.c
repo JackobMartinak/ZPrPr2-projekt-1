@@ -21,33 +21,13 @@ FILE* funkcia_v(FILE* organized_stuff){
             }
 }
 
-
-int main(){
-    
-        FILE *organized_stuff = NULL;
-        char operative;
-
-    while(1){
-        scanf("%c", &operative);
-        if(operative == 'v'){
-            printf("Prikaz V");
-            organized_stuff = funkcia_v(organized_stuff);
-            continue;
-        } else if(operative == 'o'){
-            // TODO: nacita datum(rrrrmmdd) a vypise zozname prispevkov s rovnakym
-            // Datumom zoradene podla casoveho harmonogramu a typu prezentovania, kde
-            // UP a UD bude predstavovat jeden zoznam a PP a PD bude predstavovat druhy
-            // casovo zoradeny zoznam/ Tento prikaz vypise na obrazovku aj v pripade
-            // Ak prikaz n este nebol aktivovany, ale prikaz v ano (iba v ma moznost otvorit subor)
-        } else if(operative == 'n'){
-            // printf("n");
-            // TODO: Spocita pocet zaznamov v subore
+void funkcia_n(FILE* organized_stuff){
+     // TODO: Spocita pocet zaznamov v subore
             char riadok[1024];
             char *sp, *nazovPrednasky, *prednasatel, *typPrednasky, *casPrednasky, *datumPrednasky;
             int count = 0;
             if(organized_stuff == NULL){
                 printf("Neotvoreny subor");
-                continue;
             } else {
                 while (fgets(riadok, 1024, organized_stuff) != NULL)
                 {
@@ -74,6 +54,29 @@ int main(){
             // Ak polia u6 boli predtym vytvorene tak sa dealokuju a vytvoria nanovo
             // Po uspesnom nacitani hodnot sa vypise "Nacitane data.
             // Ak subor este nie je otvoreny, vypise spravu "Neotvoreny subor"
+
+}
+
+int main(){
+    
+        FILE *organized_stuff = NULL;
+        char operative;
+
+    while(1){
+        scanf("%c", &operative);
+        if(operative == 'v'){
+            printf("Prikaz V");
+            organized_stuff = funkcia_v(organized_stuff);
+            continue;
+        } else if(operative == 'o'){
+            // TODO: nacita datum(rrrrmmdd) a vypise zozname prispevkov s rovnakym
+            // Datumom zoradene podla casoveho harmonogramu a typu prezentovania, kde
+            // UP a UD bude predstavovat jeden zoznam a PP a PD bude predstavovat druhy
+            // casovo zoradeny zoznam/ Tento prikaz vypise na obrazovku aj v pripade
+            // Ak prikaz n este nebol aktivovany, ale prikaz v ano (iba v ma moznost otvorit subor)
+        } else if(operative == 'n'){
+            // printf("n");
+            funkcia_n(organized_stuff);
         } else if (operative == 's'){
             // TODO: Nacita datum(rrrrmmdd) a typ prezentovania vo formate
             // {PD, UD, PP, UP}, vypise polozky "Cas prezentovania", "Prezenter"
