@@ -1,29 +1,38 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
-int main(){
-    
-
-    while(1){
-        FILE *organized_stuff;
-        char operative;
-        scanf("%c", &operative);
-        if(operative == 'v'){
-            if(organized_stuff != NULL){
+FILE* funkcia_v(FILE* organized_stuff){
+    if(organized_stuff != NULL){
                 // TODO: Zistit ci uz boli vytvorene dynamicke polia
                 // Ak ano tak -> Vypisat jednotlive zaznamy z poli
                 // Inak Vypisat jednotlive zaznamy zo suboru
             } else {
                     organized_stuff = fopen("./OrganizacnePodujatia.txt", "r");
+                    printf("SUBOR OTVORENY!\n");
+                    return organized_stuff;
                 if(organized_stuff == NULL) {
                     printf("Neotvoreny Subor\n");
-                    continue;
                 } else {
                     // TODO: Zistit ci uz boli vytvorene dynamicke polia
                     // Ak ano tak -> Vypisat jednotlive zaznamy z poli
                     // Inak Vypisat jednotlive zaznamy zo suboru
                 }
             }
+}
+
+
+int main(){
+    
+        FILE *organized_stuff = NULL;
+        char operative;
+
+    while(1){
+        scanf("%c", &operative);
+        if(operative == 'v'){
+            printf("Prikaz V");
+            organized_stuff = funkcia_v(organized_stuff);
+            continue;
         } else if(operative == 'o'){
             // TODO: nacita datum(rrrrmmdd) a vypise zozname prispevkov s rovnakym
             // Datumom zoradene podla casoveho harmonogramu a typu prezentovania, kde
@@ -31,7 +40,33 @@ int main(){
             // casovo zoradeny zoznam/ Tento prikaz vypise na obrazovku aj v pripade
             // Ak prikaz n este nebol aktivovany, ale prikaz v ano (iba v ma moznost otvorit subor)
         } else if(operative == 'n'){
+            // printf("n");
             // TODO: Spocita pocet zaznamov v subore
+            char riadok[1024];
+            char *sp, *nazovPrednasky, *prednasatel, *typPrednasky, *casPrednasky, *datumPrednasky;
+            int count = 0;
+            if(organized_stuff == NULL){
+                printf("Neotvoreny subor");
+                continue;
+            } else {
+                while (fgets(riadok, 1024, organized_stuff) != NULL)
+                {
+                    sp = strtok(riadok, "");
+                    while(sp != NULL){
+                        
+                        sp = strtok(NULL, "");
+                    }
+                    count++;
+                    
+                }
+                nazovPrednasky = (char*)malloc((count/ 5) * sizeof(char) + 1);
+                prednasatel = (char*)malloc((count/ 5) * sizeof(char) +1);
+                typPrednasky = (char*)malloc((count/ 5) * sizeof(char)+1);
+                casPrednasky = (char*)malloc((count/ 5) * sizeof(char)+1);
+                datumPrednasky = (char*)malloc((count/ 5) * sizeof(char)+1);
+                
+                printf("pocet riadkov: %d \n", count / 5);
+            }
             // Dynamicky vytvori polia pre jednotlive polozky
             // 1. Nazov prispevku 2. mena autorov 3. Typ prezentovania
             // 4. Cas prezentovania 5. Datum prezentacie
@@ -66,10 +101,12 @@ int main(){
             // TODO: Dealokuju sa vsetky polia, ak boli vytvorene
             // Ak je subor otvoreny, tak sa zavrie a nasledne 
             // Program skonci
+            if(organized_stuff != NULL){
+                fclose(organized_stuff);
+            }
             break;
         }
     }
     
-
     return 0;
 }
