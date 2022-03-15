@@ -3,7 +3,7 @@
 #include <string.h>
 
 // Funkcia V otvori subor
-void funkcia_v(FILE** organized_stuff, int *flag,char***nazov_p, char***prednasatel_p, char***typPrednasky_p, char***casPrednasky_p, char***datumPrednasky_p ){
+void funkcia_v(FILE** organized_stuff, int *flag,char***nazov_p, char***prednasatel_p, char***typPrednasky_p, char***casPrednasky_p, char***datumPrednasky_p, int* counts ){
     char line[200];
     int count = 0;
     char *sp;
@@ -34,13 +34,13 @@ void funkcia_v(FILE** organized_stuff, int *flag,char***nazov_p, char***prednasa
           // Ak ano tak -> Vypisat jednotlive zaznamy z poli
         } 
         if(*flag==1) {
-            for(int i = 0; i < (36 / 6); i++){
-              printf("I: %d\n", i);
-                printf("Nazov prednasky: %.150s\n", (*nazov_p)[i]);
-                printf("Prednasatel: %.100s\n", (*prednasatel_p)[i]);
-                printf("Typ prednasky: %s\n", (*typPrednasky_p)[i]);
+            for(int i = 0; i < (*counts / 6); i++){
+                // printf("I: %d\n", i);
+                printf("Nazov prednasky: %.150s", (*nazov_p)[i]);
+                printf("Prednasatel: %.100s", (*prednasatel_p)[i]);
+                printf("Typ prednasky: %s", (*typPrednasky_p)[i]);
                 printf("Cas prednasok: %c%c-%c%c\n", (*casPrednasky_p)[i][0],(*casPrednasky_p)[i][1],(*casPrednasky_p)[i][2],(*casPrednasky_p)[i][3]);
-                printf("Datum prednasky: %s\n", (*datumPrednasky_p[i]));
+                printf("Datum prednasky: %s", (*datumPrednasky_p)[i]);
                 printf("\n");
             }
         }
@@ -53,7 +53,7 @@ void funkcia_v(FILE** organized_stuff, int *flag,char***nazov_p, char***prednasa
 
 }
 
-void funkcia_n(FILE** organized_stuff, char***nazov_p, char***prednasatel_p, char***typPrednasky_p, char***casPrednasky_p, char***datumPrednasky_p, int *flag){
+void funkcia_n(FILE** organized_stuff, char***nazov_p, char***prednasatel_p, char***typPrednasky_p, char***casPrednasky_p, char***datumPrednasky_p, int *flag, int *count_p){
     // Dynamicky vytvori polia pre jednotlive polozky
     // 1. Nazov prispevku 2. mena autorov 3. Typ prezentovania
     // 4. Cas prezentovania 5. Datum prezentacie
@@ -100,6 +100,7 @@ void funkcia_n(FILE** organized_stuff, char***nazov_p, char***prednasatel_p, cha
         }
 
         printf("pocet riadkov: %d \n", count);
+        *count_p = count;
 
         // for(int i = 0; i < count / 6; i++){
         //     nazov_p[i] = (char*)malloc(sizeof(char) * 1024);
@@ -172,20 +173,20 @@ void funkcia_n(FILE** organized_stuff, char***nazov_p, char***prednasatel_p, cha
 int main(){
     
         FILE *organized_stuff = NULL;
-        // int counts = 0;
-        // int *count_p;
+        int counts = 0;
+        int *count_p;
         char operative;
         char** nazov = NULL, **prednasatel = NULL, **typPrednasky = NULL;
         char**casPrednasky = NULL; 
         char **datumPrednasky = NULL;
         int flag = 0;
         int *flag_p = &flag;
-        // count_p = &counts;
+        count_p = &counts;
     while(1){
         scanf("%c", &operative);
         if(operative == 'v'){
             // printf("Prikaz V");
-            funkcia_v(&organized_stuff, flag_p , &nazov, &prednasatel, &typPrednasky, &casPrednasky, &datumPrednasky);
+            funkcia_v(&organized_stuff, flag_p , &nazov, &prednasatel, &typPrednasky, &casPrednasky, &datumPrednasky, count_p);
             continue;
         } else if(operative == 'o'){
             // TODO: nacita datum(rrrrmmdd) a vypise zozname prispevkov s rovnakym
@@ -195,7 +196,7 @@ int main(){
             // Ak prikaz n este nebol aktivovany, ale prikaz v ano (iba v ma moznost otvorit subor)
         } else if(operative == 'n'){
             // printf("n");
-            funkcia_n(&organized_stuff, &nazov, &prednasatel, &typPrednasky, &casPrednasky, &datumPrednasky, flag_p);
+            funkcia_n(&organized_stuff, &nazov, &prednasatel, &typPrednasky, &casPrednasky, &datumPrednasky, flag_p, count_p);
           // for(int k =0; k < 6; k++){
           //   printf("NAZOV: %s", nazov[k]);
           //   printf("PRED: %s", prednasatel[k]);
