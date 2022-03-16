@@ -208,28 +208,12 @@ int main(){
     while(1){
         scanf("%c", &operative);
         if(operative == 'v'){
-            // printf("Prikaz V");
             funkcia_v(&organized_stuff, flag_p , &nazov, &prednasatel, &typPrednasky, &casPrednasky, &datumPrednasky, count_p);
             continue;
         } else if(operative == 'o'){
             funkcia_o(&organized_stuff, &nazov, &prednasatel, &typPrednasky, &casPrednasky, &datumPrednasky, flag_p, count_p);
-            // TODO: nacita datum(rrrrmmdd) a vypise zozname prispevkov s rovnakym
-            // Datumom zoradene podla casoveho harmonogramu a typu prezentovania, kde
-            // UP a UD bude predstavovat jeden zoznam a PP a PD bude predstavovat druhy
-            // casovo zoradeny zoznam/ Tento prikaz vypise na obrazovku aj v pripade
-            // Ak prikaz n este nebol aktivovany, ale prikaz v ano (iba v ma moznost otvorit subor)
         } else if(operative == 'n'){
-            // printf("n");
             funkcia_n(&organized_stuff, &nazov, &prednasatel, &typPrednasky, &casPrednasky, &datumPrednasky, flag_p, count_p);
-          // for(int k =0; k < 6; k++){
-          //   printf("NAZOV: %s", nazov[k]);
-          //   printf("PRED: %s", prednasatel[k]);
-          //   printf("TYP: %s", typPrednasky[k]);
-          //   printf("CAS: %s", casPrednasky[k]);
-          //   printf("DATUM: %s", datumPrednasky[k]);
-            // printf("DATUM ALMOST LAST: %s", datumPrednasky[4]);
-            // printf("DATUM LAST LAST: %s", datumPrednasky[5]);
-          // }
         } else if (operative == 's'){
             // TODO: Nacita datum(rrrrmmdd) a typ prezentovania vo formate
             // {PD, UD, PP, UP}, vypise polozky "Cas prezentovania", "Prezenter"
@@ -254,9 +238,6 @@ int main(){
             // Ak polia nie su vytvorene vypise sa "Pola nie su vytvorene"
             // Sprava je nasledovana koncom riadku
         } else if (operative == 'k'){
-            // TODO: Dealokuju sa vsetky polia, ak boli vytvorene
-            // Ak je subor otvoreny, tak sa zavrie a nasledne 
-            // Program skonci
             if(organized_stuff != NULL){
                 fclose(organized_stuff);
             }
@@ -275,13 +256,7 @@ int main(){
                 free(typPrednasky);
                 free(casPrednasky);
                 free(datumPrednasky);
-                // printf("Uvolnene");
-                // if(nazov == NULL){
-                //     printf("Urcite");
-                // }
-            }
-                // printf("%s", *nazov);
-            // free(nazov);        
+            }      
             break;
         }
     }
