@@ -15,6 +15,7 @@ void funkcia_v(FILE** organized_stuff, int *flag,char***nazov_p, char***prednasa
             sp = strtok(line, "");   // Nacitanie noveho riadku
             count++; // line + 1
             while(sp != NULL){      // Kym nie je koniec riadku
+              sp[strcspn(sp, "\n")] = 0; // Nacita sa string bez znaku \n
                 if(count % 6 == 1){
                     printf("Nazov prednasky: %.150s\n", sp);
                 } if (count % 6 == 2){
@@ -36,11 +37,11 @@ void funkcia_v(FILE** organized_stuff, int *flag,char***nazov_p, char***prednasa
         if(*flag==1) {
             for(int i = 0; i < (*counts / 6); i++){
                 // printf("I: %d\n", i);
-                printf("Nazov prednasky: %.150s", (*nazov_p)[i]);
-                printf("Prednasatel: %.100s", (*prednasatel_p)[i]);
-                printf("Typ prednasky: %s", (*typPrednasky_p)[i]);
+                printf("Nazov prednasky: %.150s\n", (*nazov_p)[i]);
+                printf("Prednasatel: %.100s\n", (*prednasatel_p)[i]);
+                printf("Typ prednasky: %s\n", (*typPrednasky_p)[i]);
                 printf("Cas prednasok: %c%c-%c%c\n", (*casPrednasky_p)[i][0],(*casPrednasky_p)[i][1],(*casPrednasky_p)[i][2],(*casPrednasky_p)[i][3]);
-                printf("Datum prednasky: %s", (*datumPrednasky_p)[i]);
+                printf("Datum prednasky: %s\n", (*datumPrednasky_p)[i]);
                 printf("\n");
             }
         }
@@ -77,7 +78,7 @@ void funkcia_n(FILE** organized_stuff, char***nazov_p, char***prednasatel_p, cha
         {
             sp = strtok(line, "");   // Nacitanie noveho riadku
             count++; // line + 1
-            while(sp != NULL){      // Kym nie je koniec riadku
+            while(sp != NULL){ // Kym nie je koniec riadku
                 sp = strtok(NULL, "");  // Nastavenie konca riadku 
             }
         }
@@ -132,6 +133,7 @@ void funkcia_n(FILE** organized_stuff, char***nazov_p, char***prednasatel_p, cha
             counts++;
             while(sp != NULL){      // Kym nie je koniec riadku
                 // /// // // // // // strcpy(pomocnePole, sp);
+                sp[strcspn(sp, "\n")] = 0; // Nacita sa string bez znaku \n
                 if(counts % 6 == 1){
                     strcpy((*nazov_p)[j], sp);
                     
@@ -170,6 +172,27 @@ void funkcia_n(FILE** organized_stuff, char***nazov_p, char***prednasatel_p, cha
 
 }
 
+void funkcia_o(FILE** organized_stuff, char***nazov_p, char***prednasatel_p, char***typPrednasky_p, char***casPrednasky_p, char***datumPrednasky_p, int *flag, int *count_p ) {
+    char datum[9];
+    if(*organized_stuff == NULL){
+        printf("SUBOR ESTE NEBOL OTVORENY\n");
+    } else{
+        printf("Zadaj datum: ");
+        scanf("%s", &datum);
+      // printf("%s", datum);
+        if(*flag==1){
+            datum[strcspn(datum, "\n")] = 0; // Nacita sa string bez znaku \n
+            for(int f=0; f < (*count_p / 6); f++){
+                if(strcmp((*datumPrednasky_p)[f], datum)==0){
+                    printf("%s %2s %2s %2s\n", (*casPrednasky_p)[f],(*typPrednasky_p)[f],(*prednasatel_p)[f], (*nazov_p)[f]);
+                }
+            }
+        } else {
+            printf("NEFUNGUJE");
+        }
+    }
+}
+
 int main(){
     
         FILE *organized_stuff = NULL;
@@ -189,6 +212,7 @@ int main(){
             funkcia_v(&organized_stuff, flag_p , &nazov, &prednasatel, &typPrednasky, &casPrednasky, &datumPrednasky, count_p);
             continue;
         } else if(operative == 'o'){
+            funkcia_o(&organized_stuff, &nazov, &prednasatel, &typPrednasky, &casPrednasky, &datumPrednasky, flag_p, count_p);
             // TODO: nacita datum(rrrrmmdd) a vypise zozname prispevkov s rovnakym
             // Datumom zoradene podla casoveho harmonogramu a typu prezentovania, kde
             // UP a UD bude predstavovat jeden zoznam a PP a PD bude predstavovat druhy
@@ -203,8 +227,8 @@ int main(){
           //   printf("TYP: %s", typPrednasky[k]);
           //   printf("CAS: %s", casPrednasky[k]);
           //   printf("DATUM: %s", datumPrednasky[k]);
-            printf("DATUM ALMOST LAST: %s", datumPrednasky[4]);
-            printf("DATUM LAST LAST: %s", datumPrednasky[5]);
+            // printf("DATUM ALMOST LAST: %s", datumPrednasky[4]);
+            // printf("DATUM LAST LAST: %s", datumPrednasky[5]);
           // }
         } else if (operative == 's'){
             // TODO: Nacita datum(rrrrmmdd) a typ prezentovania vo formate
@@ -238,19 +262,19 @@ int main(){
             }
 
             if(flag == 1){
-              for(int i = 0; i < 6; i++){
+                for(int i = 0; i < 6; i++){
                 
-                free(nazov[i]);
-                free(prednasatel[i]);
-                free(typPrednasky[i]);
-                free(casPrednasky[i]);
-                free(datumPrednasky[i]);
-              }
-              free(nazov);
-              free(prednasatel);
-              free(typPrednasky);
-              free(casPrednasky);
-              free(datumPrednasky);
+                    free(nazov[i]);
+                    free(prednasatel[i]);
+                    free(typPrednasky[i]);
+                    free(casPrednasky[i]);
+                    free(datumPrednasky[i]);
+                }
+                free(nazov);
+                free(prednasatel);
+                free(typPrednasky);
+                free(casPrednasky);
+                free(datumPrednasky);
                 // printf("Uvolnene");
                 // if(nazov == NULL){
                 //     printf("Urcite");
