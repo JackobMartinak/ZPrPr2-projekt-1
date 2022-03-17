@@ -192,62 +192,211 @@ void funkcia_o(FILE** organized_stuff, char***nazov_p, char***prednasatel_p, cha
             char* sp;
             int count = 0;
             while(fgets(line, 1024, *organized_stuff)){
-              sp = strtok(line, "");
-              count++;
-              while(sp != NULL){
-                sp[strcspn(sp, "\n")] = 0;
-                  if(count % 6 == 1){
-                    // printf("Nazov prednasky: %.150s\n", sp);
-                    strcpy(nazov, sp);
-                } if (count % 6 == 2){
-                    // printf("Prednasatel: %.100s\n", sp);
-                    strcpy(pred, sp);
-                } if (count % 6 == 3){
-                    // printf("Typ prednasky: %s\n", sp);
-                    strcpy(typ, sp);
-                } if (count % 6 == 4){
-                    // printf("Cas prednasok: %c%c-%c%c\n",sp[0],sp[1],sp[2],sp[3]);
-                    strcpy(cas, sp);
-                } if (count % 6 == 5){
-                    // printf("Datum prednasky: %s\n", sp);
-                    strcpy(datum_a, sp);
-                } if (count % 6 == 0){
-                    // printf("\n");
+                sp = strtok(line, "");
+                count++;
+                while(sp != NULL){
+                    sp[strcspn(sp, "\n")] = 0;
+                    if(count % 6 == 1){
+                        // printf("Nazov prednasky: %.150s\n", sp);
+                        strcpy(nazov, sp);
+                    } if (count % 6 == 2){
+                        // printf("Prednasatel: %.100s\n", sp);
+                        strcpy(pred, sp);
+                    } if (count % 6 == 3){
+                        // printf("Typ prednasky: %s\n", sp);
+                        strcpy(typ, sp);
+                    } if (count % 6 == 4){
+                        // printf("Cas prednasok: %c%c-%c%c\n",sp[0],sp[1],sp[2],sp[3]);
+                        strcpy(cas, sp);
+                    } if (count % 6 == 5){
+                        // printf("Datum prednasky: %s\n", sp);
+                        strcpy(datum_a, sp);
+                    } if (count % 6 == 0){
+                        // printf("\n");
+                    }
                 }
-              }
-              if(strcmp(datum_a, datum) == 0){
-                 printf("%s %2s %2s %2s\n", cas, typ, pred, nazov);
-              }
+                if(strcmp(datum_a, datum) == 0){
+                    printf("%s %2s %2s %2s\n", cas, typ, pred, nazov);
+                }
             }
         }
     }
 }
 
 void funkcia_s(FILE** organized_stuff, char***nazov_p, char***prednasatel_p, char***typPrednasky_p, char***casPrednasky_p, char***datumPrednasky_p, int *flag, int *count_p ) {
+    if(*flag == 0){
+        printf("Polia nie su vytvorene\n");
+    } else {
+        char datum[64], typ[64];
+        int flag_vstup = 0;
+        printf("Zadajte datum(rrrrmmdd) a typ: ");
+        scanf("%s %s",datum,  typ);
+        datum[strcspn(datum, "\n")] = 0;
+        typ[strcspn(typ, "\n")] = 0;
+        // printf("%s", datum);
+        // printf("%s", typ);
+        
+        for(int c = 0; c < (*count_p / 6); c++){
+            if(strcmp((*datumPrednasky_p)[c], datum) == 0 && strcmp((*typPrednasky_p)[c], typ) == 0){
+                printf("%s\t %s\t %s\n", (*casPrednasky_p)[c], (*prednasatel_p)[c], (*nazov_p)[c]);
+                flag_vstup = 1;
+                // printf("%d", flag_vstup);
+            }
+        }
+    // printf("%d", flag_vstup);
+        if(flag_vstup == 0){
+            printf("Pre dany vstup neexistuju zaznamy\n");
+        }
+    }
+}
+
+void funkcia_p(FILE** organized_stuff, char***nazov_p, char***prednasatel_p, char***typPrednasky_p, char***casPrednasky_p, char***datumPrednasky_p, int *flag, int *count_p ) {
+    if(*flag == 0){
+        printf("Polia nie su vytvorene\n");
+    } else {
+        int indexovanie_poli;
+        printf("%d", *count_p);
+        *count_p += 6;
+        indexovanie_poli = (*count_p/6) - 1;
+        printf("%d", indexovanie_poli);
+
+          
+            *nazov_p = (char**)realloc(*nazov_p,(indexovanie_poli)*sizeof(char*)+sizeof(char *));
+            *prednasatel_p = (char**)realloc(*prednasatel_p,(indexovanie_poli)*sizeof(char*)+sizeof(char *));
+            *typPrednasky_p = (char**)realloc(*typPrednasky_p,(indexovanie_poli)*sizeof(char*)+sizeof(char *));
+            *casPrednasky_p = (char**)realloc(*casPrednasky_p, (indexovanie_poli)*sizeof(char*)+ sizeof(char *));
+            *datumPrednasky_p = (char**)realloc(*datumPrednasky_p, (indexovanie_poli)*sizeof(char*)+ sizeof(char *));
+          printf("Polia reallocovane");
+            (*nazov_p)[indexovanie_poli] = (char*)malloc(60 * sizeof(char));
+            (*prednasatel_p)[indexovanie_poli] = (char*)malloc(60 * sizeof(char));
+            (*typPrednasky_p)[indexovanie_poli] = (char*)malloc(60 * sizeof(char));
+            (*casPrednasky_p)[indexovanie_poli] = (char*)malloc(60 * sizeof(char));
+            (*datumPrednasky_p)[indexovanie_poli] = (char*)malloc(60 * sizeof(char));
+
+          
+            
+        char st[150], tmp;
+        for(int v = 1; v < 6; v++){
+          printf("Zadajte sem: ");
+            scanf("%c", &tmp);
+            scanf("%[^\n]s", st);
+            printf("ST = %s\n", st);
+            st[strcspn(st, "\n")] = 0;
+            if(v % 6 == 1){
+                printf("1.\n");
+                strcpy((*nazov_p)[indexovanie_poli], st);
+              // printf("Vypis nazov[%d]: %s\n",indexovanie_poli, (*nazov_p)[indexovanie_poli]);
+            } else if(v % 6 == 2){
+                printf("2.\n");
+                strcpy((*prednasatel_p)[indexovanie_poli], st);
+              // printf("Vypis prednasatel[%d]: %s",indexovanie_poli, (*prednasatel_p)[indexovanie_poli]);
+            } else if(v % 6 == 3){
+                printf("3.\n");
+                strcpy((*typPrednasky_p)[indexovanie_poli], st);
+              // printf("Vypis prednaska[%d]: %s",indexovanie_poli, (*typPrednasky_p)[indexovanie_poli]);
+            } else if(v % 6 == 4){
+                printf("4.\n");
+                strcpy((*casPrednasky_p)[indexovanie_poli], st);
+              // printf("Vypis cas[%d]: %s",indexovanie_poli, (*casPrednasky_p)[indexovanie_poli]);
+                
+            } else if(v % 6 == 5) {
+                printf("5.\n");
+                strcpy((*datumPrednasky_p)[indexovanie_poli], st);
+              // printf("Vypis Datum[%d]: %s",indexovanie_poli, (*datumPrednasky_p)[indexovanie_poli]);
+            }
+        }
+    }
+}
+
+void funkcia_h(FILE** organized_stuff, char***nazov_p, char***prednasatel_p, char***typPrednasky_p, char***casPrednasky_p, char***datumPrednasky_p, int *flag, int *count_p) {
   if(*flag == 0){
     printf("Polia nie su vytvorene\n");
   } else {
-    char datum[64], typ[64];
-    int flag_vstup = 0;
-    printf("Zadajte datum(rrrrmmdd) a typ: ");
-    scanf("%s %s",datum,  typ);
-    datum[strcspn(datum, "\n")] = 0;
-    typ[strcspn(typ, "\n")] = 0;
-    // printf("%s", datum);
-    // printf("%s", typ);
+    int up810 = 0,ud810 = 0,pp810 =0, pd810 =0, up1012=0, ud1012 = 0, pp1012 = 0, pd1012=0,up1214=0,ud1214=0,pp1214=0,pd1214=0,up1416=0,ud1416=0,pp1416=0,pd1416=0,up1618=0,ud1618=0,pp1618=0,pd1618=0,up1820=0,ud1820=0,pp1820=0,pd1820=0;
+    int cas=0;
     
-    for(int c = 0; c < (*count_p / 6); c++){
-      if(strcmp((*datumPrednasky_p)[c], datum) == 0 && strcmp((*typPrednasky_p)[c], typ) == 0){
-        printf("%s\t %s\t %s\n", (*casPrednasky_p)[c], (*prednasatel_p)[c], (*nazov_p)[c]);
-        flag_vstup = 1;
-        // printf("%d", flag_vstup);
-      }
+    for(int r=0; r< (*count_p/6); r++){
+      if(strcmp((*typPrednasky_p)[r], "UP") == 0) {
+        cas = atoi((*casPrednasky_p)[r]);
+        // printf("UP === %d\n", cas);
+        if(800<=cas && cas<1000) {up810+=1;}
+          else if(1000 <=cas && cas <1200) {up1012++;}
+          else if(1200<=cas && cas<1400) {up1214++;}
+          else if(1400<=cas && cas<1600) {up1416++;}
+          else if(1600<=cas && cas<1800) {up1618++;}
+          else if(1800<=cas && cas<2000) {up1820++;}
+        }
+      if(strcmp((*typPrednasky_p)[r], "UD") == 0) {
+        cas = atoi((*casPrednasky_p)[r]);
+        // printf("UD === %d\n", cas);
+        if(800<=cas && cas<1000) {ud810+=1;}
+          else if(1000 <=cas && cas<1200) {ud1012++;}
+          else if(1200<=cas && cas<1400) {ud1214++;}
+          else if(1400<=cas && cas<1600) {ud1416++;}
+          else if(1600<=cas && cas<1800) {ud1618++;}
+          else if(1800<=cas && cas<2000) {ud1820++;}
+        }
+      if(strcmp((*typPrednasky_p)[r], "PP") == 0) {
+        cas = atoi((*casPrednasky_p)[r]);
+        // printf("PP === %d\n", cas);
+        if(800<=cas && cas<1000) {pp810+=1;}
+          else if(1000 <=cas && cas<1200) {pp1012++;}
+          else if(1200<=cas && cas<1400) {pp1214++;}
+          else if(1400<=cas && cas<1600) {pp1416++;}
+          else if(1600<=cas && cas<1800) {pp1618++;}
+          else if(1800<=cas && cas<2000) {pp1820++;}
+        }
+      if(strcmp((*typPrednasky_p)[r], "PD") == 0) {
+        cas = atoi((*casPrednasky_p)[r]);
+        // printf("PD === %d\n", cas);
+        if(800<=cas && cas<1000) {pd810+=1;}
+          else if(1000 <=cas && cas<1200) {pd1012++;}
+          else if(1200<=cas && cas<1400) {pd1214++;}
+          else if(1400<=cas && cas<1600) {pd1416++;}
+          else if(1600<=cas && cas<1800) {pd1618++;}
+          else if(1800<=cas && cas<2000) {pd1820++;}
+        }
     }
-    // printf("%d", flag_vstup);
-    if(flag_vstup == 0){
-      printf("Pre dany vstup neexistuju zaznamy\n");
-    }
+    printf(" hodina \t\tUP\tUD\tPP\tPD\n");
+    printf("08:00-09:59 :\t%d\t%d\t%d\t%d\n", up810, ud810, pp810, pd810);
+    printf("10:00-11:59 :\t%d\t%d\t%d\t%d\n", up1012, ud1012, pp1012, pd1012);
+    printf("12:00-13:59 :\t%d\t%d\t%d\t%d\n", up1214, ud1214,pp1214,pd1214);
+    printf("14:00-15:59 :\t%d\t%d\t%d\t%d\n", up1416,ud1416,pp1416,pd1416);
+    printf("16:00-17:59 :\t%d\t%d\t%d\t%d\n", up1618,ud1618,pp1618,pd1618);
+    printf("18:00-19:59 :\t%d\t%d\t%d\t%d\n", up1820,ud1820,pp1820,pd1820);
+    
+}
   }
+
+void funkcia_z(FILE** organized_stuff, char***nazov_p, char***prednasatel_p, char***typPrednasky_p, char***casPrednasky_p, char***datumPrednasky_p, int *flag, int *count_p){
+    if(*flag == 0){
+        printf("Polia nie su vytvorene\n");
+    } else {
+        char vstup[150], temp;
+        int n;
+        printf("Zadajte nazov prispevku na vymazanie: ");
+        scanf("%c", &temp);
+        scanf("%[^\n]s", vstup);
+        // printf("%s\n", vstup);
+        vstup[strcspn(vstup, "\n")] = 0;
+        // printf("vstup = %s , nazov = %s", vstup, (*nazov_p)[0]);
+        for(int z = 0; z < (*count_p/6); z++){
+            if(strcmp((*nazov_p)[z], vstup)== 0){
+                printf("%s", (*nazov_p)[z]);
+                // n++;
+                // free((*nazov_p)[z]);
+                // free((*prednasatel_p)[z]);
+                // free((*typPrednasky_p)[z]);
+                // free((*casPrednasky_p)[z]);
+                // free((*datumPrednasky_p)[z]);
+                // *nazov_p = (char**)realloc(*nazov_p,((*count_p/6) - n)*sizeof(char*));
+                // *prednasatel_p = (char**)realloc(*prednasatel_p,((*count_p/6) - n)*sizeof(char*));
+                // *typPrednasky_p = (char**)realloc(*typPrednasky_p,((*count_p/6) - n)*sizeof(char*));
+                // *casPrednasky_p = (char**)realloc(*casPrednasky_p,((*count_p/6) - n)*sizeof(char*));
+                // *datumPrednasky_p = (char**)realloc(*datumPrednasky_p,((*count_p/6) - n)*sizeof(char*));
+            }
+        }
+    }
 }
 
 int main(){
@@ -272,19 +421,22 @@ int main(){
         } else if(operative == 'n'){
             funkcia_n(&organized_stuff, &nazov, &prednasatel, &typPrednasky, &casPrednasky, &datumPrednasky, flag_p, count_p);
         } else if (operative == 's'){
-          funkcia_s(&organized_stuff, &nazov, &prednasatel, &typPrednasky, &casPrednasky, &datumPrednasky, flag_p, count_p);
+            funkcia_s(&organized_stuff, &nazov, &prednasatel, &typPrednasky, &casPrednasky, &datumPrednasky, flag_p, count_p);
         } else if (operative == 'h') {
+            funkcia_h(&organized_stuff, &nazov, &prednasatel, &typPrednasky, &casPrednasky, &datumPrednasky, flag_p, count_p);
             // TODO: Vypise sa histogram pre typ prezentovania a hodinu v
             // 2-hodinovom intervale
             // Ak dynamicke polia nie su vytvorene, vypise spravu
             // Polia nie su vytvorene \n
         } else if (operative == 'z'){
+            funkcia_z(&organized_stuff, &nazov, &prednasatel, &typPrednasky, &casPrednasky, &datumPrednasky, flag_p, count_p);
             // TODO: Nacita nazov prispevku a zaznam/zaznamy s rovnakym
             // Nazvom sa vymazu z dynamickych poli. 
             // Po vymazani sa vypise hlaska kolko zaznamov bolo vymazanych
             // Ak polia nie su vytvorene, vypise "Polia nie su vytvorene"
             // Sprava je nasledovana koncom riadku
         } else if (operative == 'p') {
+            funkcia_p(&organized_stuff, &nazov, &prednasatel, &typPrednasky, &casPrednasky, &datumPrednasky, flag_p, count_p);
             // TODO: Nacitat vsetky udaje z klavesnice a pridat 
             // zaznam do dynamickych poli na koniec
             // Po pridani sa vypise "Zaznam sa podarilo pridat"
@@ -296,19 +448,19 @@ int main(){
             }
 
             if(flag == 1){
-              for(int i = 0; i < 6; i++){
+                for(int i = 0; i < (*count_p/6); i++){
                 
-                free(nazov[i]);
-                free(prednasatel[i]);
-                free(typPrednasky[i]);
-                free(casPrednasky[i]);
-                free(datumPrednasky[i]);
-              }
-              free(nazov);
-              free(prednasatel);
-              free(typPrednasky);
-              free(casPrednasky);
-              free(datumPrednasky);
+                    free(nazov[i]);
+                    free(prednasatel[i]);
+                    free(typPrednasky[i]);
+                    free(casPrednasky[i]);
+                    free(datumPrednasky[i]);
+                }
+                free(nazov);
+                free(prednasatel);
+                free(typPrednasky);
+                free(casPrednasky);
+                free(datumPrednasky);
             }      
             break;
         }
